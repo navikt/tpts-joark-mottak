@@ -1,5 +1,6 @@
 val ktorVersion = "1.6.3"
 val ktlintVersion = "0.38.1"
+val log4jVersion = "2.14.1"
 
 plugins {
     application
@@ -32,19 +33,15 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("org.slf4j:slf4j-api:1.7.32")
-    implementation("org.slf4j:slf4j-simple:1.7.32")
+    implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
+    implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
     implementation("io.ktor:ktor-server:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-auth:$ktorVersion")
     implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
     implementation("io.ktor:ktor-locations:$ktorVersion")
-//    implementation("io.ktor:ktor-client-core:$ktorVersion")
-//    implementation("io.ktor:ktor-client-cio:$ktorVersion")
-//    implementation("io.ktor:ktor-client-jackson:$ktorVersion")
-//    implementation("io.ktor:ktor-client-auth:$ktorVersion")
-//    implementation("io.ktor:ktor-jackson:$ktorVersion")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:1.7.3")
     implementation("org.apache.kafka:kafka-clients:2.8.0")
@@ -107,7 +104,11 @@ tasks {
             showExceptions = true
             showStackTraces = true
             exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-            events = setOf(org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED, org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED, org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED)
+            events = setOf(
+                org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+                org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+                org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
+            )
         }
     }
 }

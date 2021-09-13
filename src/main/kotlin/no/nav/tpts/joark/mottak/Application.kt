@@ -46,15 +46,15 @@ fun Route.healthRoutes() {
                 )
             }
         }
-    }
-    route("/isAlive") {
+    }.also { LOGGER.info { "setting up endpoint /metrics" } }
+    route("setting up endpoint /isAlive") {
         get {
             call.respondText(text = "ALIVE", contentType = ContentType.Text.Plain)
         }
-    }
+    }.also { LOGGER.info { "setting up endpoint /isAlive" } }
     route("/isReady") {
         get {
             call.respondText(text = "READY", contentType = ContentType.Text.Plain)
         }
-    }
+    }.also { LOGGER.info { "setting up endpoint /isReady" } }
 }

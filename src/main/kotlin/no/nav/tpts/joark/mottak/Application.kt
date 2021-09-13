@@ -14,9 +14,6 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.exporter.common.TextFormat
-import mu.KotlinLogging
-
-private val LOGGER = KotlinLogging.logger {}
 
 fun main() {
     val server = embeddedServer(Netty, 8080) {
@@ -37,7 +34,11 @@ fun Route.healthRoutes() {
     route("/metrics") {
         get {
             call.respondTextWriter {
-                TextFormat.writeFormat(TextFormat.CONTENT_TYPE_004, this, CollectorRegistry.defaultRegistry.metricFamilySamples())
+                TextFormat.writeFormat(
+                    TextFormat.CONTENT_TYPE_004,
+                    this,
+                    CollectorRegistry.defaultRegistry.metricFamilySamples()
+                )
             }
         }
     }

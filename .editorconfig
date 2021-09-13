@@ -1,0 +1,7 @@
+root = true
+[*.{kt,kts}]
+# possible values: number (e.g. 2), "unset" (makes ktlint ignore indentation completely)
+ij_kotlin_continuation_indent_size = 8
+ij_kotlin_packages_to_use_import_on_demand = 999
+
+

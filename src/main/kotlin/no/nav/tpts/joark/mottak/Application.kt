@@ -14,8 +14,12 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.prometheus.client.CollectorRegistry
 import io.prometheus.client.exporter.common.TextFormat
+import mu.KotlinLogging
+
+private val LOGGER = KotlinLogging.logger {}
 
 fun main() {
+    LOGGER.info { "starting server" }
     val server = embeddedServer(Netty, 8080) {
         install(DefaultHeaders)
         routing {
@@ -25,6 +29,7 @@ fun main() {
 
     Runtime.getRuntime().addShutdownHook(
         Thread {
+            LOGGER.info { "stopping server" }
             server.stop(gracePeriodMillis = 3000, timeoutMillis = 5000)
         }
     )

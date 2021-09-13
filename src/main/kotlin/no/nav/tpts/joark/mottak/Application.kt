@@ -27,9 +27,9 @@ fun main() {
     }.start()
 
     Runtime.getRuntime().addShutdownHook(
-            Thread {
-                server.stop(gracePeriodMillis = 3000, timeoutMillis = 5000)
-            }
+        Thread {
+            server.stop(gracePeriodMillis = 3000, timeoutMillis = 5000)
+        }
     )
 }
 

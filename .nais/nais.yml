@@ -1,0 +1,19 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: tpts-joark-mottak
+  namespace: tpts
+  labels:
+    team: tpts
+spec:
+  image: {{ image }}
+  port: 8080
+  ingresses:
+    - https://tpts-joark-mottak.dev.intern.nav.no
+  liveness:
+    path: /isAlive
+  readiness:
+    path: /isReady
+  prometheus:
+    enabled: true
+    path: /metrics

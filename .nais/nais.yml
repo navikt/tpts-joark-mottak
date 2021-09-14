@@ -12,12 +12,8 @@ spec:
     - https://tpts-joark-mottak.dev.intern.nav.no
   liveness:
     path: /isAlive
-    initialDelay: 10
-    timeout: 2
   readiness:
     path: /isReady
-    initialDelay: 10
-    timeout: 2
   prometheus:
     enabled: true
     path: /metrics

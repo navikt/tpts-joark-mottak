@@ -47,7 +47,7 @@ fun Route.healthRoutes() {
             }
         }
     }.also { LOGGER.info { "setting up endpoint /metrics" } }
-    route("setting up endpoint /isAlive") {
+    route("/isAlive") {
         get {
             call.respondText(text = "ALIVE", contentType = ContentType.Text.Plain)
         }

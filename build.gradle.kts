@@ -4,11 +4,11 @@ val log4jVersion = "2.14.1"
 
 plugins {
     application
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.5.31"
     id("com.github.davidmc24.gradle.plugin.avro") version "1.2.1"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("com.github.ben-manes.versions") version "0.39.0"
-    id("com.diffplug.spotless") version "5.15.0"
+    id("com.diffplug.spotless") version "5.15.2"
 }
 
 apply {
@@ -26,7 +26,6 @@ application {
 repositories {
     mavenCentral()
     maven("https://packages.confluent.io/maven/")
-    maven("https://jitpack.io")
     maven("https://repo.adeo.no/repository/maven-releases")
     maven("https://repo.adeo.no/repository/nexus2-m2internal")
 }
@@ -43,12 +42,12 @@ dependencies {
     implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
     implementation("io.ktor:ktor-locations:$ktorVersion")
     implementation("io.ktor:ktor-metrics-micrometer:$ktorVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.7.3")
-    implementation("org.apache.kafka:kafka-clients:2.8.0")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.7.4")
+    implementation("org.apache.kafka:kafka-clients:3.0.0")
     implementation("org.apache.avro:avro:1.10.2")
-    implementation("io.confluent:kafka-avro-serializer:6.2.0")
+    implementation("io.confluent:kafka-avro-serializer:6.2.1")
 
-    testImplementation(platform("org.junit:junit-bom:5.8.0"))
+    testImplementation(platform("org.junit:junit-bom:5.8.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("io.mockk:mockk:1.12.0")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")

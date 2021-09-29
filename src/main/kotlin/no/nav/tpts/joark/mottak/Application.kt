@@ -19,7 +19,6 @@ import mu.KotlinLogging
 private val LOGGER = KotlinLogging.logger {}
 
 fun main() {
-    foo
     LOGGER.info { "starting server" }
     val server = embeddedServer(Netty, 8080) {
         install(DefaultHeaders)

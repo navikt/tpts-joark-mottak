@@ -26,7 +26,7 @@ internal fun joarkConsumer(
     return KafkaConsumer<String, GenericRecord>(
         Properties().also {
             it["groupId"] = "foo"
-            it["bootstrapServerUrl"] = bootstrapServerUrl
+            it["bootstrap.servers"] = bootstrapServerUrl
             it["username"] = username
             it["password"] = password
             it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"

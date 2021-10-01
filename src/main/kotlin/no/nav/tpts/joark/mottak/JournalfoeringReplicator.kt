@@ -25,7 +25,7 @@ internal fun joarkConsumer(
     val maxPollIntervalMs = Duration.ofSeconds(60 + maxPollRecords * 2.toLong()).toMillis()
     return KafkaConsumer<String, GenericRecord>(
         Properties().also {
-            it["groupId"] = "foo"
+            it["group.id"] = "foo"
             it["bootstrap.servers"] = bootstrapServerUrl
             it["username"] = username
             it["password"] = password

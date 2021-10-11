@@ -14,8 +14,11 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.TopicPartition
+import org.apache.kafka.common.config.SaslConfigs
+import org.apache.kafka.common.config.SslConfigs
 import org.apache.kafka.common.errors.WakeupException
 import org.apache.kafka.common.serialization.StringDeserializer
+import java.io.File
 import java.time.Duration
 import java.util.Properties
 import kotlin.coroutines.CoroutineContext
@@ -42,6 +45,22 @@ internal fun joarkConsumer(
             it[AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] = schemaUrl
             it[ConsumerConfig.MAX_POLL_RECORDS_CONFIG] = maxPollRecords
             it[ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG] = "$maxPollIntervalMs"
+            LOGGER.info { "authenticating against Kafka brokers " }
+            it[SaslConfigs.SASL_MECHANISM] = "PLAIN"
+            it[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SASL_PLAINTEXT"
+            it[SaslConfigs.SASL_JAAS_CONFIG] =
+                "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"foo\" password=\"bar\";"
+            val trustStoreLocation = System.getenv("NAV_TRUSTSTORE_PATH")
+            trustStoreLocation?.apply {
+                try {
+                    it[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SASL_SSL"
+                    it[SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG] = File(this).absolutePath
+                    it[SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG] = System.getenv("NAV_TRUSTSTORE_PASSWORD")
+                    LOGGER.info { "Configured '${SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG}' location " }
+                } catch (e: Exception) {
+                    LOGGER.error { "Failed to set '${SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG}' location " }
+                }
+            }
         }
     ).also {
         it.subscribe(listOf(topicName))
@@ -88,12 +107,13 @@ internal class JournalfoeringReplicator(
     }
 
     private fun onRecords(records: ConsumerRecords<String, GenericRecord>) {
-        LOGGER.info { "onrecords: $records" }
-        if (records.isEmpty) return // poll returns an empty collection in case of rebalancing
+        LOGGER.info { "onrecords: ${records.count()}" }
+        // if (records.isEmpty) return // poll returns an empty collection in case of rebalancing
         val currentPositions = records
             .groupBy { TopicPartition(it.topic(), it.partition()) }
             .mapValues { partition -> partition.value.minOf { it.offset() } }
             .toMutableMap()
+        LOGGER.info { "currentPositions: $currentPositions" }
         try {
             records.onEach { record ->
                 LOGGER.info { "Mottok $record" }

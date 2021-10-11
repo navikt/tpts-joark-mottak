@@ -1,4 +1,4 @@
-val ktorVersion = "1.6.3"
+val ktorVersion = "1.6.4"
 val ktlintVersion = "0.38.1"
 val log4jVersion = "2.14.1"
 
@@ -6,9 +6,9 @@ plugins {
     application
     kotlin("jvm") version "1.5.31"
     id("com.github.davidmc24.gradle.plugin.avro") version "1.2.1"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
     id("com.github.ben-manes.versions") version "0.39.0"
-    id("com.diffplug.spotless") version "5.15.2"
+    id("com.diffplug.spotless") version "5.16.0"
 }
 
 apply {

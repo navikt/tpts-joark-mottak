@@ -105,8 +105,8 @@ internal class JournalfoeringReplicator(
         } catch (err: Exception) {
             LOGGER.info(
                 "due to an error during processing, positions are reset to each next message (after each record that was processed OK):" +
-                        currentPositions.map { "\tpartition=${it.key}, offset=${it.value}" }
-                            .joinToString(separator = "\n", prefix = "\n", postfix = "\n"),
+                    currentPositions.map { "\tpartition=${it.key}, offset=${it.value}" }
+                        .joinToString(separator = "\n", prefix = "\n", postfix = "\n"),
                 err
             )
             currentPositions.forEach { (partition, offset) -> consumer.seek(partition, offset) }

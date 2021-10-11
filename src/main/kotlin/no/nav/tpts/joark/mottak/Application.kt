@@ -27,7 +27,7 @@ fun main() {
             schemaUrl = "https://kafka-schema-registry.nais-q.adeo.no",
             topicName = "aapen-dok-journalfoering-v1-q1"
         )
-    )
+    ).also { it.start() }
 
     LOGGER.info { "starting server" }
     val server = embeddedServer(Netty, 8080) {

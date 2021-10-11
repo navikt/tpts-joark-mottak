@@ -1,15 +1,30 @@
 tpts-joark-mottak
 ================
 
-Tar i mot tynne kafka meldinger fra Joark og produserer tykke kafka meldinger for videre behandling.
+Tar i mot tynne kafka-meldinger fra Joark og produserer tykke kafka meldinger for videre behandling.
 
 ---
 
 # Komme i gang
+## Forutsetninger
+- [JDK](https://jdk.java.net/)
+- [Kotlin](https://kotlinlang.org/)
+- [Gradle](https://gradle.org/) brukes som byggeverktøy og er inkludert i oppsettet
 
-Gradle brukes som byggverktøy og er bundlet inn.
+For hvilke versjoner som brukes, [se byggefilen](build.gradle.kts)
 
-`./gradlew build`
+## Bygging og denslags
+For å bygge artifaktene: 
+
+```sh
+./gradlew build
+```
+
+For å sjekke utdaterte avhengigheter:
+
+```sh
+./gradlew dependencyUpdates
+```
 
 ---
 

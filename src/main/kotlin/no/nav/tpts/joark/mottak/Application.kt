@@ -19,11 +19,9 @@ import mu.KotlinLogging
 private val LOGGER = KotlinLogging.logger {}
 
 fun main() {
-    val journalfoeringReplicator = JournalfoeringReplicator(
+    JournalfoeringReplicator(
         joarkConsumer(
             bootstrapServerUrl = "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
-            username = "",
-            password = "",
             schemaUrl = "https://kafka-schema-registry.nais-q.adeo.no",
             topicName = "aapen-dok-journalfoering-v1-q1"
         )

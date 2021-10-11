@@ -26,20 +26,16 @@ internal const val JOURNALFOERING_REPLICATOR_GROUPID = "tpts-journalfoering-aive
 
 internal fun joarkConsumer(
     bootstrapServerUrl: String,
-    username: String,
-    password: String,
     schemaUrl: String,
     topicName: String
 ): KafkaConsumer<String, GenericRecord> {
-    val maxPollRecords = 50
+    val maxPollRecords = 5
     val maxPollIntervalMs = Duration.ofSeconds(60 + maxPollRecords * 2.toLong()).toMillis()
     return KafkaConsumer<String, GenericRecord>(
         Properties().also {
             it[ConsumerConfig.GROUP_ID_CONFIG] = JOURNALFOERING_REPLICATOR_GROUPID
             it[CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServerUrl
-            it["username"] = username
-            it["password"] = password
-            it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
+            it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "latest"
             it[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
             it[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
             it[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = "false"
@@ -92,6 +88,7 @@ internal class JournalfoeringReplicator(
     }
 
     private fun onRecords(records: ConsumerRecords<String, GenericRecord>) {
+        LOGGER.info { "onrecords: $records" }
         if (records.isEmpty) return // poll returns an empty collection in case of rebalancing
         val currentPositions = records
             .groupBy { TopicPartition(it.topic(), it.partition()) }

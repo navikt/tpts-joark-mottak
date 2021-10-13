@@ -41,8 +41,8 @@ internal fun joarkConsumer(
     val maxPollIntervalMs = Duration.ofSeconds(60 + maxPollRecords * 2.toLong()).toMillis()
     val config = systemProperties() overriding EnvironmentVariables
     config.list().forEach { LOGGER.info { it.second.keys } }
-    val userName = config[Key("SRVTPTS.JOARK.MOTTAK.USERNAME", stringType)]
-    val password: String = config[Key("SRVTPTS.JOARK.MOTTAK.PASSWORD", stringType)]
+    val userName = config[Key("SRVTPTS_JOARK_MOTTAK_USERNAME", stringType)]
+    val password: String = config[Key("SRVTPTS_JOARK_MOTTAK_PASSWORD", stringType)]
     LOGGER.info { "username: $userName" }
     return KafkaConsumer<String, GenericRecord>(
         Properties().also {

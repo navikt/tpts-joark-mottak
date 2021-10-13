@@ -1,5 +1,8 @@
 package no.nav.tpts.joark.mottak
 
+import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
+import com.natpryce.konfig.Key
+import com.natpryce.konfig.stringType
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
 import kotlinx.coroutines.CoroutineScope
@@ -34,6 +37,10 @@ internal fun joarkConsumer(
 ): KafkaConsumer<String, GenericRecord> {
     val maxPollRecords = 5
     val maxPollIntervalMs = Duration.ofSeconds(60 + maxPollRecords * 2.toLong()).toMillis()
+    val userName = systemProperties()[Key("srvtpts.joark.mottak.username", stringType)]
+    val password: String = systemProperties()[Key("srvtpts.joark.mottak.password", stringType)]
+    LOGGER.info { "username1: $userName" }
+    LOGGER.info { "username2: ${systemProperties()[Key("srvtpts.joark.username", stringType)]}" }
     return KafkaConsumer<String, GenericRecord>(
         Properties().also {
             it[ConsumerConfig.GROUP_ID_CONFIG] = JOURNALFOERING_REPLICATOR_GROUPID
@@ -49,7 +56,7 @@ internal fun joarkConsumer(
             it[SaslConfigs.SASL_MECHANISM] = "PLAIN"
             it[CommonClientConfigs.SECURITY_PROTOCOL_CONFIG] = "SASL_PLAINTEXT"
             it[SaslConfigs.SASL_JAAS_CONFIG] =
-                "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"foo\" password=\"bar\";"
+                "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$userName\" password=\"$password\";"
             val trustStoreLocation = System.getenv("NAV_TRUSTSTORE_PATH")
             trustStoreLocation?.apply {
                 try {

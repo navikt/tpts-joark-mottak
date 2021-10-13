@@ -46,6 +46,7 @@ dependencies {
     implementation("org.apache.kafka:kafka-clients:3.0.0")
     implementation("org.apache.avro:avro:1.10.2")
     implementation("io.confluent:kafka-avro-serializer:6.2.1")
+    implementation("com.natpryce:konfig:1.6.10.0")
 
     testImplementation(platform("org.junit:junit-bom:5.8.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")

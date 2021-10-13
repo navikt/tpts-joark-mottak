@@ -1,7 +1,9 @@
 package no.nav.tpts.joark.mottak
 
 import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
+import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.Key
+import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
 import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig
 import io.confluent.kafka.serializers.KafkaAvroDeserializer
@@ -37,9 +39,12 @@ internal fun joarkConsumer(
 ): KafkaConsumer<String, GenericRecord> {
     val maxPollRecords = 5
     val maxPollIntervalMs = Duration.ofSeconds(60 + maxPollRecords * 2.toLong()).toMillis()
-    systemProperties().list().forEach { LOGGER.info { it.second.keys } }
-    val userName = systemProperties()[Key("USERNAME", stringType)]
-    val password: String = systemProperties()[Key("PASSWORD", stringType)]
+    val config = systemProperties() overriding EnvironmentVariables
+    LOGGER.info("size=" + config.list().size)
+    config.list().forEach { LOGGER.info { it.first } }
+    config.list().forEach { LOGGER.info { it.second.keys } }
+    val userName = config[Key("srvtpts.joark.username", stringType)]
+    val password: String = config[Key("srvtpts.joark.password", stringType)]
     LOGGER.info { "username: $userName" }
     return KafkaConsumer<String, GenericRecord>(
         Properties().also {

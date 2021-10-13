@@ -37,6 +37,7 @@ internal fun joarkConsumer(
 ): KafkaConsumer<String, GenericRecord> {
     val maxPollRecords = 5
     val maxPollIntervalMs = Duration.ofSeconds(60 + maxPollRecords * 2.toLong()).toMillis()
+    systemProperties().list().forEach { LOGGER.info { it.second.keys } }
     val userName = systemProperties()[Key("USERNAME", stringType)]
     val password: String = systemProperties()[Key("PASSWORD", stringType)]
     LOGGER.info { "username: $userName" }

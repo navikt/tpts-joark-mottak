@@ -37,10 +37,9 @@ internal fun joarkConsumer(
 ): KafkaConsumer<String, GenericRecord> {
     val maxPollRecords = 5
     val maxPollIntervalMs = Duration.ofSeconds(60 + maxPollRecords * 2.toLong()).toMillis()
-    val userName = systemProperties()[Key("srvtpts.joark.mottak.username", stringType)]
-    val password: String = systemProperties()[Key("srvtpts.joark.mottak.password", stringType)]
-    LOGGER.info { "username1: $userName" }
-    LOGGER.info { "username2: ${systemProperties()[Key("srvtpts.joark.username", stringType)]}" }
+    val userName = systemProperties()[Key("srvtpts.joark.username", stringType)]
+    val password: String = systemProperties()[Key("srvtpts.joark.password", stringType)]
+    LOGGER.info { "username: $userName" }
     return KafkaConsumer<String, GenericRecord>(
         Properties().also {
             it[ConsumerConfig.GROUP_ID_CONFIG] = JOURNALFOERING_REPLICATOR_GROUPID

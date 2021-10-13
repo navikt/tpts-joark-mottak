@@ -23,4 +23,3 @@ spec:
   envFrom:
     - secret: serviceuser-srvtpts-joark-mottak
     - secret: serviceuser-srvtpts-joark
-    - secret: serviceuser-srvtpts-joark-mottak2

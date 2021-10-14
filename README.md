@@ -1,7 +1,9 @@
 tpts-joark-mottak
 ================
 
-Tar i mot tynne kafka-meldinger fra Joark og produserer tykke kafka meldinger for videre behandling.
+Denne applikasjonen er under avvikling siden Joark/journalpost nå produserer sine hendelser på aiven. Dermed faller
+behovet for å replikere fra on-prem til aiven bort. I mellomtiden brukes denne appen til å logge meldinger. 
+So Long, and Thanks for All the Fish.
 
 ---
 

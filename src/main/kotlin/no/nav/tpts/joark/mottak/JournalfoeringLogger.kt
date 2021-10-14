@@ -30,8 +30,6 @@ import kotlin.coroutines.CoroutineContext
 
 private val LOGGER = KotlinLogging.logger {}
 
-internal const val JOURNALFOERING_REPLICATOR_GROUPID = "tpts-journalfoering-aiven-replicator-v1"
-
 internal fun joarkConsumer(
     bootstrapServerUrl: String,
     schemaUrl: String,
@@ -41,11 +39,11 @@ internal fun joarkConsumer(
     val maxPollIntervalMs = Duration.ofSeconds(60 + maxPollRecords * 2.toLong()).toMillis()
     val config = systemProperties() overriding EnvironmentVariables
     val userName = config[Key("SRVTPTS_JOARK_MOTTAK_USERNAME", stringType)]
-    val password: String = config[Key("SRVTPTS_JOARK_MOTTAK_PASSWORD", stringType)]
+    val password = config[Key("SRVTPTS_JOARK_MOTTAK_PASSWORD", stringType)]
     LOGGER.info { "Found username: $userName" }
     return KafkaConsumer<String, GenericRecord>(
         Properties().also {
-            it[ConsumerConfig.GROUP_ID_CONFIG] = JOURNALFOERING_REPLICATOR_GROUPID
+            it[ConsumerConfig.GROUP_ID_CONFIG] = "tpts-journalfoering-logger-v1"
             it[CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServerUrl
             it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
             it[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
@@ -122,14 +120,10 @@ internal class JournalfoeringReplicator(
             .groupBy { TopicPartition(it.topic(), it.partition()) }
             .mapValues { partition -> partition.value.minOf { it.offset() } }
             .toMutableMap()
-        LOGGER.info { "currentPositions: $currentPositions" }
         try {
             records.onEach { record ->
-                if ("IND" == record.value().get("temaNytt").toString()) {
-                    LOGGER.info { "Mottok tema IND: $record" }
-                } else {
-                    LOGGER.debug { "Mottok annet tema: $record" }
-                }
+                val tema = record.value().get("temaNytt")?.toString() ?: ""
+                LOGGER.info { "$currentPositions: Mottok tema '$tema'. " + if (tema == "IND") "$record" else "Hopp over" }
                 currentPositions[TopicPartition(record.topic(), record.partition())] = record.offset() + 1
             }
         } catch (err: Exception) {

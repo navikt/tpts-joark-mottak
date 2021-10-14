@@ -37,7 +37,7 @@ internal fun joarkConsumer(
     schemaUrl: String,
     topicName: String
 ): KafkaConsumer<String, GenericRecord> {
-    val maxPollRecords = 5
+    val maxPollRecords = 50
     val maxPollIntervalMs = Duration.ofSeconds(60 + maxPollRecords * 2.toLong()).toMillis()
     val config = systemProperties() overriding EnvironmentVariables
     val userName = config[Key("SRVTPTS_JOARK_MOTTAK_USERNAME", stringType)]
@@ -47,7 +47,7 @@ internal fun joarkConsumer(
         Properties().also {
             it[ConsumerConfig.GROUP_ID_CONFIG] = JOURNALFOERING_REPLICATOR_GROUPID
             it[CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServerUrl
-            it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "latest"
+            it[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
             it[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
             it[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
             it[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = "false"
@@ -125,7 +125,11 @@ internal class JournalfoeringReplicator(
         LOGGER.info { "currentPositions: $currentPositions" }
         try {
             records.onEach { record ->
-                LOGGER.info { "Mottok $record" }
+                if ("IND" == record.value().get("temaNytt").toString()) {
+                    LOGGER.info { "Mottok tema IND: $record" }
+                } else {
+                    LOGGER.debug { "Mottok annet tema: $record" }
+                }
                 currentPositions[TopicPartition(record.topic(), record.partition())] = record.offset() + 1
             }
         } catch (err: Exception) {

@@ -116,7 +116,7 @@ internal class JournalfoeringReplicator(
     }
 
     private fun onRecords(records: ConsumerRecords<String, GenericRecord>) {
-        LOGGER.info { "onrecords: ${records.count()}" }
+        LOGGER.debug { "onrecords: ${records.count()}" }
         if (records.isEmpty) return // poll returns an empty collection in case of rebalancing
         val currentPositions = records
             .groupBy { TopicPartition(it.topic(), it.partition()) }

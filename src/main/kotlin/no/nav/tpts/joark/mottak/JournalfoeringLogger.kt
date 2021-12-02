@@ -123,7 +123,7 @@ internal class JournalfoeringReplicator(
         try {
             records.onEach { record ->
                 val tema = record.value().get("temaNytt")?.toString() ?: ""
-                LOGGER.info { "$currentPositions: Mottok tema '$tema'. $record" }
+                LOGGER.info { "$currentPositions: Mottok tema '$tema'. " + if (tema == "IND" || tema == "TIL") "$record" else "Hopp over" }
                 currentPositions[TopicPartition(record.topic(), record.partition())] = record.offset() + 1
             }
         } catch (err: Exception) {

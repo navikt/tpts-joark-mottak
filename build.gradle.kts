@@ -1,6 +1,6 @@
 val ktorVersion = "1.6.4"
 val ktlintVersion = "0.38.1"
-val log4jVersion = "2.17.0"
+val log4jVersion = "2.17.1"
 
 plugins {
     application

@@ -86,14 +86,14 @@ internal class JournalfoeringReplicator(
     }
 
     fun start() {
-        LOGGER.info("starting JournalfoeringReplicator")
+        LOGGER.info{ "starting JournalfoeringReplicator" }
         launch {
             run()
         }
     }
 
     private fun stop() {
-        LOGGER.info("stopping JournalfoeringReplicator")
+        LOGGER.info{ "stopping JournalfoeringReplicator" }
         consumer.wakeup()
         job.cancel()
     }
@@ -141,6 +141,7 @@ internal class JournalfoeringReplicator(
     }
 
     private fun closeResources() {
+        LOGGER.info { "Closing resources" }
         tryAndLog(consumer::unsubscribe)
         tryAndLog(consumer::close)
     }
@@ -149,12 +150,12 @@ internal class JournalfoeringReplicator(
         try {
             block()
         } catch (err: Exception) {
-            LOGGER.error(err.message, err)
+            LOGGER.error(err) {err.message}
         }
     }
 
     private fun shutdownHook() {
-        LOGGER.info("received shutdown signal, stopping app")
+        LOGGER.info{"received shutdown signal, stopping app"}
         stop()
     }
 }

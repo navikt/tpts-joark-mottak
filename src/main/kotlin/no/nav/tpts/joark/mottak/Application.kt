@@ -28,8 +28,6 @@ fun main() {
     ).also { it.start() }
 
     LOGGER.info { "starting server" }
-    LOGGER.info { "clusterName from env: ${System.getenv("NAIS_CLUSTER_NAME")}" }
-    LOGGER.info { "clusterName from prop: ${System.getProperty("NAIS_CLUSTER_NAME")}" }
     val server = embeddedServer(Netty, 8080) {
         install(DefaultHeaders)
         routing {

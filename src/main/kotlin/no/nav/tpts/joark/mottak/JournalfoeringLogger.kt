@@ -78,7 +78,7 @@ internal class JournalfoeringReplicator(
     private val consumer: Consumer<String, GenericRecord>
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO + Job()
+        get() = Dispatchers.IO + job
     private val job: Job = Job()
 
     init {

@@ -4,6 +4,7 @@ import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.DefaultHeaders
 import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
 import io.ktor.response.respondText
 import io.ktor.response.respondTextWriter
 import io.ktor.routing.Route
@@ -19,7 +20,7 @@ import mu.KotlinLogging
 private val LOGGER = KotlinLogging.logger {}
 
 fun main() {
-    JournalfoeringReplicator(
+    val replicator = JournalfoeringReplicator(
         joarkConsumer(
             bootstrapServerUrl = "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
             schemaUrl = "https://kafka-schema-registry.nais-q.adeo.no",
@@ -31,7 +32,7 @@ fun main() {
     val server = embeddedServer(Netty, 8080) {
         install(DefaultHeaders)
         routing {
-            healthRoutes()
+            healthRoutes(listOf(replicator))
         }
     }.start()
 
@@ -43,7 +44,7 @@ fun main() {
     )
 }
 
-fun Route.healthRoutes() {
+fun Route.healthRoutes(healthChecks: List<HealthCheck>) {
     route("/metrics") {
         get {
             call.respondTextWriter {
@@ -57,7 +58,13 @@ fun Route.healthRoutes() {
     }.also { LOGGER.info { "setting up endpoint /metrics" } }
     route("/isAlive") {
         get {
-            call.respondText(text = "ALIVE", contentType = ContentType.Text.Plain)
+            val failedHealthChecks = healthChecks.filter { it.status() == HealthStatus.DOWN }
+            if (failedHealthChecks.isNotEmpty()) {
+                LOGGER.warn { "Failed health checks: $failedHealthChecks" }
+                call.respondText(text = "ERROR", contentType = ContentType.Text.Plain, HttpStatusCode.ServiceUnavailable)
+            } else {
+                call.respondText(text = "ALIVE", contentType = ContentType.Text.Plain)
+            }
         }
     }.also { LOGGER.info { "setting up endpoint /isAlive" } }
     route("/isReady") {

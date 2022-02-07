@@ -76,10 +76,17 @@ internal fun joarkConsumer(
 
 internal class JournalfoeringReplicator(
     private val consumer: Consumer<String, GenericRecord>
-) : CoroutineScope {
+) : CoroutineScope, HealthCheck {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
     private val job: Job = Job()
+
+    override fun status(): HealthStatus {
+        return when (job.isActive) {
+            false -> HealthStatus.DOWN
+            true -> HealthStatus.UP
+        }
+    }
 
     init {
         Runtime.getRuntime().addShutdownHook(Thread(::shutdownHook))

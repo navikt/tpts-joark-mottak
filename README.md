@@ -1,5 +1,6 @@
-tpts-joark-mottak
-================
+# DEPRECATED REPO, TO BE DELETED
+
+# tpts-joark-mottak
 
 Denne applikasjonen er under avvikling siden Joark/journalpost nå produserer sine hendelser på aiven. Dermed faller
 behovet for å replikere fra on-prem til aiven bort. I mellomtiden brukes denne appen til å logge meldinger. 

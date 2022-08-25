@@ -2,7 +2,7 @@
 
 # tpts-joark-mottak
 
-Denne applikasjonen er under avvikling siden Joark/journalpost nå produserer sine hendelser på aiven. Dermed faller
+Denne applikasjonen er under avvikling siden Joark/journalpost [nå produserer sine hendelser på aiven](https://confluence.adeo.no/pages/viewpage.action?pageId=432217859). Dermed faller
 behovet for å replikere fra on-prem til aiven bort. I mellomtiden brukes denne appen til å logge meldinger. 
 So Long, and Thanks for All the Fish.
 
